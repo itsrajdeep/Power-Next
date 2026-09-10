@@ -1,0 +1,43 @@
+P1 Sensor Twin Verification Report
+======================================
+
+Per-sensor twin CV metrics:
+   sensor    cv_r2      mae  residual_sigma
+Sensor_S1 0.997431 0.153927        0.194285
+Sensor_S2 0.997322 0.144016        0.181444
+Sensor_S3 0.996031 0.246596        0.309913
+
+Derived threshold: 2.325487 = max(8 * largest robust residual sigma, small floor)
+
+Training fault taxonomy:
+  none: 866
+  missing_sensor: 15
+  duplicate_vector: 24
+  sensor_spike: 95
+  invalid_sum: 134
+
+Separation gap:
+  max Valid residual: 1.064734
+  min spiked residual: 4.218935
+
+Out-of-fold invalid-detection metrics:
+  precision: 1.000000
+  recall:    1.000000
+  f1:        1.000000
+  rows:      1000
+
+Test-set flag counts:
+  none: 304
+  missing_sensor: 6
+  duplicate_vector: 8
+  sensor_spike: 32
+  invalid_total: 46
+  flagged_rate: 13.1429%
+
+Noise robustness:
+  sigma=0.1: 0/200 flagged, all_valid=True
+  sigma=0.25: 0/200 flagged, all_valid=True
+  sigma=0.5: 0/200 flagged, all_valid=True
+
+Fallbacks used: none.
+Requests for other lanes: align P4 imports to src.twin or keep this compatibility module.
