@@ -6,6 +6,10 @@ __pycache__/
 # Jupyter Notebook checkpoints
 .ipynb_checkpoints/
 
+# Pytest cache
+.pytest_cache/
+
+
 # Environments
 .env
 .venv
