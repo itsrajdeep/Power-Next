@@ -134,6 +134,85 @@ def assert_no_group_leakage(train: pd.DataFrame) -> None:
     assert (bad == 1).all(), f"{int((bad > 1).sum())} duplicate group(s) straddle a fold boundary"
 
 
+# ----------------------------------------------------------------------------
+# COMPATIBILITY LAYER
+#
+# Person 1 developed against a differently-named version of this contract before
+# the shared one was merged. Rather than rewrite ~700 lines of working, verified
+# detector code, the names that version exposed are re-exported here as aliases.
+#
+# These are aliases, not second definitions: every one of them points at the
+# canonical object above, so there is exactly one source of truth for the data
+# path, the fold assignment and the duplicate grouping.
+#
+# Do not add new code against these names. New work uses the canonical names.
+# ----------------------------------------------------------------------------
+REPO_ROOT = ROOT
+DATASET_PATH = XLSX
+FOLDS_PATH = FOLDS_CSV
+
+TRAIN_SHEET = "Training_Data"
+TEST_SHEET = "Test_Data"
+SAMPLE_SHEET = "Sample_Submission"
+
+RANDOM_SEED = SEED
+
+COL_TEST_ID = "Test_ID"
+COL_VOLTAGE, COL_CURRENT, COL_TEMP, COL_DURATION = OPS
+COL_S1, COL_S2, COL_S3 = S3
+COL_S4 = S4
+COL_REF = TARGET_REG
+COL_LABEL = TARGET_CLS
+COL_FOLD = "fold"
+
+OPERATING_COLS = OPS
+SENSOR_COLS = SENSORS
+CRITICAL_SENSOR_COLS = S3
+FINGERPRINT_COLS = MEASUREMENTS
+
+LABEL_VALID = "Valid"
+LABEL_INVALID = "Invalid"
+
+FAULT_NONE = "none"
+FAULT_MISSING = "missing_sensor"
+FAULT_DUPLICATE = "duplicate_vector"
+FAULT_SPIKE = "sensor_spike"
+
+
+def fingerprint_row(row_values, decimals: int = 4) -> str:
+    """Fingerprint of a single row, given its FINGERPRINT_COLS values in order.
+
+    Row-wise counterpart of `fingerprint`, which works on a whole frame. The two
+    use different NaN sentinels, so never compare a string from one against a
+    string from the other. Within either, NaN compares equal to NaN.
+    """
+    parts = []
+    for v in row_values:
+        parts.append("nan" if pd.isna(v) else str(round(float(v), decimals)))
+    return "|".join(parts)
+
+
+def fingerprint_series(df: pd.DataFrame, cols=None, decimals: int = 4) -> pd.Series:
+    """`fingerprint_row` applied to every row, index-aligned with *df*."""
+    use_cols = cols or FINGERPRINT_COLS
+    return df[use_cols].apply(lambda r: fingerprint_row(r, decimals), axis=1)
+
+
+def load_train(path=None) -> pd.DataFrame:
+    """Training_Data sheet only."""
+    return pd.read_excel(Path(path) if path else XLSX, sheet_name=TRAIN_SHEET)
+
+
+def load_test(path=None) -> pd.DataFrame:
+    """Test_Data sheet only."""
+    return pd.read_excel(Path(path) if path else XLSX, sheet_name=TEST_SHEET)
+
+
+def load_folds(path=None) -> pd.DataFrame:
+    """folds.csv as written by `get_folds` (columns: Test_ID, fold)."""
+    return pd.read_csv(Path(path) if path else FOLDS_CSV)
+
+
 if __name__ == "__main__":
     train, test, sample = load_data()
     folds = get_folds(train)

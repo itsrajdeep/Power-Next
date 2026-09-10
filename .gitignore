@@ -16,3 +16,10 @@ ENV/
 # OS generated files
 .DS_Store
 Thumbs.db
+
+# submission build artifacts
+submission/
+*.zip
+π-thon/
+pi-thon/
+methodology.pdf

@@ -1,0 +1,13 @@
+{
+  "records_analysed": 350,
+  "abnormal_invalid_records": 46,
+  "minimum_predicted_reference_parameter": 12.7952,
+  "maximum_predicted_reference_parameter": 62.1261,
+  "average_predicted_reference_parameter": 26.4219,
+  "highest_attention_test_ids": [
+    "TST-0172",
+    "TST-0290",
+    "TST-0142"
+  ],
+  "approach_explanation": "Our pipeline implements a physics-grounded digital twin. Operating conditions (voltage, current, ambient temperature, duration) predict expected thermal sensor responses (S1-S3). Tests with missing sensors, duplicate operating conditions, or sensor residuals exceeding dynamic empirical thresholds are classified as Invalid. Hot-spot reference temperatures are predicted by blending a degree-4 polynomial Ridge with gradient-boosted trees at a weight chosen out-of-fold, trained strictly on verified Valid records to eliminate corrupted targets and clipped to the observed physical range. Attention scoring prioritizes tests by combining invalidity status, sensor residual severity, missingness and temperature percentile rank for targeted engineering review."
+}

@@ -1,0 +1,9 @@
+rank,model,task,accuracy,precision,recall,f1,roc_auc
+1,Rule (P1 Twin),classification,1.0,1.0,1.0,1.0,1.0
+2,LightGBM,classification,0.937,0.9733,0.5448,0.6986,0.8793
+3,CatBoost,classification,0.93,0.8721,0.5597,0.6818,0.8548
+4,HistGB,classification,0.921,0.9104,0.4552,0.607,0.8426
+5,XGBoost,classification,0.92,1.0,0.403,0.5745,0.8763
+6,ExtraTrees,classification,0.9,1.0,0.2537,0.4048,0.8581
+7,RF,classification,0.894,1.0,0.209,0.3457,0.8563
+8,LogReg,classification,0.54,0.1362,0.4552,0.2096,0.5199

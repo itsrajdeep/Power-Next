@@ -1,0 +1,187 @@
+==============================================================================
+PERSON 4: PIPELINE, DELIVERABLES & INTEGRATION QA — FINAL REPORT
+CPRI PowerNext-AI Hackathon Screening Round
+==============================================================================
+
+1. PIPELINE EXECUTION & STUB STATUS
+------------------------------------------------------------------------------
+============================================================================
+CPRI PowerNext-AI Pipeline — Team: PowerNext
+============================================================================
+
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+  WARNING: PIPELINE RUNNING WITH PROVISIONAL STUBS!
+    * src/twin.py not found -> using src/twin_stub.py
+    * src/regress.py not found -> using src/regress_stub.py
+  Outputs written to disk are PROVISIONAL.
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+[1/6] Loading datasets...
+      Train: 1000 rows | Test: 350 rows | Sample: 350 rows
+[2/6] Training sensor twin and regression models on Valid records...
+      Valid training records: 866 / 1000
+      Sensor twin fitted. Empirical threshold: 2.0000
+      Reference Parameter regression model fitted.
+[3/6] Generating predictions on test dataset...
+[4/6] Performing strict submission verification...
+      Validation PASSED: exactly 350 rows, aligned Test_IDs, no NaN/inf, valid labels.
+[5/6] Computing diagnostics, attention rankings, and summary metrics...
+[6/6] Writing final deliverables...
+      Rendering visualization charts...
+
+============================================================================
+PIPELINE EXECUTION COMPLETE — SUMMARY OF DELIVERABLES
+============================================================================
+  Submission CSV   : outputs\final\PowerNext.csv (350 rows)
+  Summary JSON     : outputs\final\summary.json
+  Diagnostics CSV  : outputs\final\test_diagnostics.csv (350 rows)
+----------------------------------------------------------------------------
+  Analysed Records : 350
+  Invalid Records  : 46 (13.1%)
+  Min Temperature  : 13.26 °C
+  Max Temperature  : 61.69 °C
+  Mean Temperature : 26.32 °C
+  Attention IDs    : TST-0172, TST-0290, TST-0142
+============================================================================
+
+
+Pipeline Exit Code: 0
+Stubs Active: YES (Provisional fallback stubs src/twin_stub.py and src/regress_stub.py)
+Rationale: Lane 1 (src/twin.py) and Lane 2 (src/regress.py) not merged into branch.
+
+2. SUBMISSION FILE VALIDATION RESULTS
+------------------------------------------------------------------------------
+Submission file exists: True (outputs\final\PowerNext.csv)
+Row count check       : Expected 350 | Actual 350 -> PASS
+Columns match exact   : Expected ['Test_ID', 'Predicted_Reference_Parameter', 'Validity_Label'] | Actual ['Test_ID', 'Predicted_Reference_Parameter', 'Validity_Label'] -> PASS
+No index column check : First CSV line: Test_ID,Predicted_Reference_Parameter,Validity_Label -> PASS
+Test_ID order match   : Matches Sample_Submission row-for-row -> True -> PASS
+Finite values check   : NaN count=0, Inf count=0 -> PASS
+Validity labels check : Allowed=['Invalid', 'Valid'] | Found=['Invalid', 'Valid'] -> PASS
+Class breakdown       : Valid=304 (86.9%), Invalid=46 (13.1%)
+
+3. SUMMARY.JSON CONTENTS & VERIFICATION
+------------------------------------------------------------------------------
+{
+  "records_analysed": 350,
+  "abnormal_invalid_records": 46,
+  "minimum_predicted_reference_parameter": 13.2623,
+  "maximum_predicted_reference_parameter": 61.6904,
+  "average_predicted_reference_parameter": 26.3159,
+  "highest_attention_test_ids": [
+    "TST-0172",
+    "TST-0290",
+    "TST-0142"
+  ],
+  "approach_explanation": "Our automated pipeline implements a physics-grounded digital twin and polynomial regression ensemble. Operating conditions (voltage, current, ambient temperature, duration) predict expected thermal sensor responses (S1-S3). Tests with missing sensors, duplicate operating conditions, or sensor residuals exceeding dynamic empirical thresholds are classified as Invalid. Hot-spot reference temperatures are predicted using a regularized polynomial model trained strictly on verified Valid records to eliminate corruption. Attention scoring prioritizes tests by combining invalidity status, normalized sensor residual severity, missingness, and temperature percentile rank for targeted engineering review."
+}
+
+Approach explanation word count: 83 words (Limit: <=100) -> PASS
+
+4. TOP THREE ATTENTION TEST IDs & SELECTION RATIONALE
+------------------------------------------------------------------------------
+Rank 1: Test_ID=TST-0172
+  - Attention Score : 0.7476
+  - Validity Label  : Invalid (c_invalid=1.0)
+  - Residual Severity: c_residual=1.0000
+  - Missing Features: c_missing=0.1250
+  - Temp Percentile : c_temp_percentile=0.8653 (Pred Temp: 39.40 deg C)
+
+Rank 2: Test_ID=TST-0290
+  - Attention Score : 0.7457
+  - Validity Label  : Invalid (c_invalid=1.0)
+  - Residual Severity: c_residual=1.0000
+  - Missing Features: c_missing=0.0000
+  - Temp Percentile : c_temp_percentile=0.9828 (Pred Temp: 50.88 deg C)
+
+Rank 3: Test_ID=TST-0142
+  - Attention Score : 0.7328
+  - Validity Label  : Invalid (c_invalid=1.0)
+  - Residual Severity: c_residual=1.0000
+  - Missing Features: c_missing=0.0000
+  - Temp Percentile : c_temp_percentile=0.9312 (Pred Temp: 45.77 deg C)
+
+Formula: Attention_Score = 0.25*(c_invalid + c_residual + c_missing + c_temp_percentile)
+These three IDs were selected because they represent anomalous tests (flagged Invalid) with
+high digital twin sensor residual deviations, missing telemetry, and high thermal stress.
+
+5. PYTEST OUTPUT SUMMARY
+------------------------------------------------------------------------------
+============================= test session starts =============================
+platform win32 -- Python 3.9.13, pytest-8.4.2, pluggy-1.6.0 -- C:\Users\ayush\AppData\Local\Programs\Python\Python39\python.exe
+cachedir: .pytest_cache
+rootdir: C:\Users\ayush\Documents\coding\power-next\Power-Next
+plugins: anyio-4.12.0
+collecting ... collected 17 items
+
+tests/test_robustness.py::test_attack_1_randomly_nan_sensor_readings PASSED [  5%]
+tests/test_robustness.py::test_attack_2_drop_sensor_s4_entirely PASSED   [ 11%]
+tests/test_robustness.py::test_attack_3_duplicate_20_random_rows PASSED  [ 17%]
+tests/test_robustness.py::test_attack_4_multiply_currents_by_1_3 PASSED  [ 23%]
+tests/test_robustness.py::test_attack_5_insert_all_zero_sensors PASSED   [ 29%]
+tests/test_robustness.py::test_attack_6_shuffle_column_order PASSED      [ 35%]
+tests/test_submission.py::test_submission_shape_and_columns PASSED       [ 41%]
+tests/test_submission.py::test_no_index_column_written PASSED            [ 47%]
+tests/test_submission.py::test_test_ids_match_sample_submission PASSED   [ 52%]
+tests/test_submission.py::test_no_duplicate_or_missing_test_ids PASSED   [ 58%]
+tests/test_submission.py::test_predictions_no_nan_or_infinite PASSED     [ 64%]
+tests/test_submission.py::test_validity_labels_domain PASSED             [ 70%]
+tests/test_submission.py::test_summary_json_schema PASSED                [ 76%]
+tests/test_submission.py::test_summary_statistics_agree_with_csv PASSED  [ 82%]
+tests/test_submission.py::test_approach_explanation_word_count PASSED    [ 88%]
+tests/test_submission.py::test_highest_attention_ids PASSED              [ 94%]
+tests/test_submission.py::test_identical_measurement_vectors_receive_identical_outputs PASSED [100%]
+
+============================= 17 passed in 2.31s ==============================
+
+Pytest Exit Code: 0
+
+6. ROBUSTNESS RESULTS FOR ALL SIX ATTACKS
+------------------------------------------------------------------------------
+============================= test session starts =============================
+platform win32 -- Python 3.9.13, pytest-8.4.2, pluggy-1.6.0 -- C:\Users\ayush\AppData\Local\Programs\Python\Python39\python.exe
+cachedir: .pytest_cache
+rootdir: C:\Users\ayush\Documents\coding\power-next\Power-Next
+plugins: anyio-4.12.0
+collecting ... collected 6 items
+
+tests/test_robustness.py::test_attack_1_randomly_nan_sensor_readings PASSED [ 16%]
+tests/test_robustness.py::test_attack_2_drop_sensor_s4_entirely PASSED   [ 33%]
+tests/test_robustness.py::test_attack_3_duplicate_20_random_rows PASSED  [ 50%]
+tests/test_robustness.py::test_attack_4_multiply_currents_by_1_3 PASSED  [ 66%]
+tests/test_robustness.py::test_attack_5_insert_all_zero_sensors PASSED   [ 83%]
+tests/test_robustness.py::test_attack_6_shuffle_column_order PASSED      [100%]
+
+============================== 6 passed in 2.15s ==============================
+
+Attack 1 (Randomly NaN 10% sensor readings) : PASS (Emits 350 valid rows, flags missing sensors)
+Attack 2 (Drop Sensor_S4 entirely)          : PASS (Verdicts 100% unchanged, irrelevant sensor ignored)
+Attack 3 (Duplicate 20 random rows)         : PASS (Duplicates 100% flagged Invalid)
+Attack 4 (Current x 1.3 beyond train range) : PASS (Predictions remain finite, positive, physically sensible)
+Attack 5 (Insert row of all-zero sensors)   : PASS (Disconnected sensor row flagged Invalid)
+Attack 6 (Shuffle column order)             : PASS (Column indexing guarantees 100% identical outputs)
+
+7. FRESH-CLONE VERIFICATION RESULT
+------------------------------------------------------------------------------
+Fresh clone verification was executed in an isolated temporary directory:
+  - Repository cloned to temporary directory
+  - Clean virtual environment created via python -m venv
+  - Pinned dependencies installed via pip install -r requirements.txt
+  - run.py executed with exit code 0
+  - Full pytest suite executed with 17 passed, 0 failures
+Result: PASS (100% reproducible and isolated)
+
+8. BUGS & INCONSISTENCIES FOUND IN OTHER MODULES (REPORT ONLY - NO EDITS MADE)
+------------------------------------------------------------------------------
+1. Person 1 (p1-twin branch):
+   - File Naming: Person 1 created src/p1_twin.py instead of the agreed contract path src/twin.py.
+   - Contract Modification: Person 1 modified src/contract.py on branch p1-twin, violating the rule
+     that src/contract.py is shared and forbidden to edit without team arbitration.
+   - Function Signatures: derive_threshold on p1_twin took different arguments than specified in the brief.
+2. Person 2 (p2-regression):
+   - Missing Module: src/regress.py has not yet been committed or pushed.
+3. Shared Contract (src/contract.py):
+   - is_duplicate(df) in src/contract.py expects df to have all columns in MEASUREMENTS (including Sensor_S4).
+     If a user/pipeline drops the irrelevant Sensor_S4 column, is_duplicate raises KeyError.
+     Recommendation: Update src/contract.py is_duplicate to subset on [c for c in MEASUREMENTS if c in df.columns].
+==============================================================================

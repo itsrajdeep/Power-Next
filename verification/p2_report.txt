@@ -1,0 +1,103 @@
+
+==========================================================================
+1. CANDIDATE COMPARISON (out-of-fold, contract folds)
+==========================================================================
+                                model     MAE    RMSE      R2   MedAE    MaxAE  fold_MAE_std  worst_fold_MAE
+BLEND w=0.65 (poly4 a=0.0001 + trees) 0.45783 0.65747 0.99625 0.34017  5.00931       0.03665         0.50161
+                 poly4 ridge a=0.0001 0.50955 0.74013 0.99525 0.34596  3.33762       0.05186         0.59771
+                  poly5 ridge a=0.001 0.51774 0.74535 0.99518 0.35196  3.17811       0.05757         0.59797
+                 poly5 ridge a=0.0001 0.52039 0.74842 0.99514 0.34461  3.21044       0.05583         0.58920
+                  poly4 ridge a=0.001 0.52290 0.75557 0.99505 0.36287  3.80762       0.04637         0.59719
+                   poly5 ridge a=0.01 0.52315 0.75313 0.99508 0.35701  3.60677       0.04926         0.59405
+                    poly5 ridge a=0.1 0.54386 0.77663 0.99477 0.36966  4.11892       0.03424         0.59363
+                   poly4 ridge a=0.01 0.55905 0.79450 0.99452 0.38196  4.61227       0.03324         0.60839
+                      poly5 ridge a=1 0.56333 0.80909 0.99432 0.38577  5.09152       0.03442         0.61933
+                    poly4 ridge a=0.1 0.57081 0.81253 0.99427 0.41537  5.16227       0.03133         0.61761
+                   poly3 ridge a=0.01 0.59173 0.83676 0.99393 0.43099  5.68275       0.02796         0.63293
+                  poly3 ridge a=0.001 0.59339 0.83461 0.99396 0.44286  5.31924       0.02779         0.62883
+                 poly3 ridge a=0.0001 0.59390 0.83462 0.99396 0.44615  5.27849       0.02765         0.62861
+                      poly4 ridge a=1 0.61940 0.89226 0.99309 0.42572  7.23852       0.03705         0.68606
+                    poly3 ridge a=0.1 0.62036 0.89203 0.99310 0.45451  7.38815       0.03707         0.68999
+                 HistGradientBoosting 0.64976 1.11788 0.98916 0.43213 10.42004       0.05429         0.75410
+                      poly3 ridge a=1 0.73265 1.02131 0.99095 0.57854  9.21304       0.04853         0.81181
+
+==========================================================================
+2. CHOSEN CONFIGURATION
+==========================================================================
+  polynomial degree : 4
+  ridge alpha       : 0.0001
+  blend weight      : 0.65  (0.65 poly + 0.35 trees)
+  training rows     : 866 (Valid only)
+  model inputs      : ['Applied_Voltage_kV', 'Load_Current_A', 'Ambient_Temperature_C', 'Test_Duration_min']
+  sensors used      : none - by design
+
+==========================================================================
+3. FINAL OUT-OF-FOLD PERFORMANCE
+==========================================================================
+  MAE               : 0.4578
+  RMSE              : 0.6575
+  R2                : 0.99625
+  median abs error  : 0.3402
+  max abs error     : 5.0093
+
+  poly  per-fold MAE : 0.4604  0.5977  0.4543  0.5118  0.5239   (worst 0.5977)
+  trees per-fold MAE : 0.6235  0.6176  0.6500  0.6036  0.7541   (worst 0.7541)
+  blend per-fold MAE : 0.4093  0.5016  0.4247  0.4593  0.4945   (worst 0.5016)
+
+  worst-fold MAE    : 0.5016   spread across folds = 0.0366
+
+==========================================================================
+4. ERROR BY OPERATING REGIME (out-of-fold)
+==========================================================================
+        regime   n    MAE  MaxAE
+   current low 289 0.2877 1.7480
+   current mid 288 0.6485 5.0093
+  current high 289 0.4380 4.1304
+   voltage low 289 0.4859 3.9972
+   voltage mid 288 0.4200 4.1304
+  voltage high 289 0.4675 5.0093
+ambient <= 40C 684 0.3861 3.0633
+ ambient > 40C 182 0.7276 5.0093
+
+==========================================================================
+5. PREDICTIONS ON THE 350 TEST ROWS
+==========================================================================
+  n                 : 350
+  min               : 12.7952
+  max               : 62.1261
+  mean              : 26.4219
+  clip range        : [1.9850, 71.5181]
+  clipped           : 0 of 350
+  all finite        : True
+
+==========================================================================
+6. EXTRAPOLATION STRESS TEST
+==========================================================================
+  factor  Applied_Voltage_kV  Load_Current_A  Ambient_Temperature_C  Test_Duration_min      raw  prediction  clipped
+1.0x max             31.9783        109.9526                34.5939            31.3094  55.2412     55.2412    False
+1.2x max             38.3740        131.9431                34.5939            31.3094  77.7915     71.5181     True
+1.5x max             47.9674        164.9289                34.5939            31.3094 140.8365     71.5181     True
+
+  raw strictly increasing with current   : True
+  shipped non-decreasing (clip saturates): True
+  all positive                          : True
+  all finite                            : True
+  within clip range                     : True
+
+==========================================================================
+7. ACCEPTANCE TESTS
+==========================================================================
+  [PASS]  out-of-fold MAE <= 0.55              0.4578
+  [PASS]  out-of-fold R2 >= 0.994              0.99625
+  [PASS]  worst fold MAE <= 0.70               0.5016
+  [PASS]  trained on Valid rows only           866 rows
+  [PASS]  no sensor among inputs               ['Applied_Voltage_kV', 'Load_Current_A', 'Ambient_Temperature_C', 'Test_Duration_min']
+  [PASS]  all test predictions finite          no NaN/inf
+  [PASS]  test predictions within 10-70 C      12.80..62.13
+  [PASS]  extrapolation stays positive         min 55.24
+  [PASS]  extrapolation monotone in current    raw [np.float64(55.2), np.float64(77.8), np.float64(140.8)] -> shipped [np.float64(55.2), np.float64(71.5), np.float64(71.5)]
+  [PASS]  extrapolation bounded by clip        ceiling 71.52
+
+==========================================================================
+ALL ACCEPTANCE TESTS PASS
+==========================================================================
