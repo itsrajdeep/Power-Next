@@ -1,0 +1,12 @@
+rank,model,task,mae,rmse,r2
+1,Blend,regression,0.6453,1.9054,0.9682
+2,CatBoost,regression,0.6507,1.8419,0.9703
+3,ExtraTrees,regression,0.7455,2.0252,0.9641
+4,LightGBM,regression,0.8519,2.0636,0.9627
+5,HistGBR,regression,0.853,2.0526,0.9631
+6,XGBoost,regression,0.8697,2.0383,0.9636
+7,PolyRidge(d=3),regression,0.8848,1.9916,0.9653
+8,RF,regression,0.8945,2.1059,0.9612
+9,Huber,regression,3.3634,4.3069,0.8377
+10,Ridge,regression,3.4634,4.2317,0.8433
+11,ElasticNet,regression,3.4634,4.2317,0.8433
