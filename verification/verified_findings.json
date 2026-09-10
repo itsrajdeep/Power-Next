@@ -1,0 +1,62 @@
+{
+  "train_rows": 1000,
+  "test_rows": 350,
+  "valid": 866,
+  "invalid": 134,
+  "submission_cols": [
+    "Test_ID",
+    "Predicted_Reference_Parameter",
+    "Validity_Label"
+  ],
+  "missing_s123": 15,
+  "missing_s123_all_invalid": true,
+  "dup_rows": 24,
+  "dup_all_invalid": true,
+  "test_dup_rows": 8,
+  "s4_max_abs_corr": 0.0707,
+  "sensor_twin": {
+    "Sensor_S1": {
+      "r2": 0.99748,
+      "mae": 0.1525,
+      "sigma": 0.1925
+    },
+    "Sensor_S2": {
+      "r2": 0.99727,
+      "mae": 0.1466,
+      "sigma": 0.1833
+    },
+    "Sensor_S3": {
+      "r2": 0.99595,
+      "mae": 0.2482,
+      "sigma": 0.313
+    }
+  },
+  "taxonomy": {
+    "missing": 15,
+    "duplicate": 24,
+    "spike": 95,
+    "total": 134
+  },
+  "gap": {
+    "valid_max": 1.0551,
+    "spike_min": 4.1774
+  },
+  "oof_f1": 1.0,
+  "regression": {
+    "all_rows_mae": 0.8963,
+    "valid_poly_mae": 0.5134,
+    "blend_mae": 0.4606,
+    "blend_w": 0.65,
+    "blend_r2": 0.99607
+  },
+  "test_apply": {
+    "missing": 6,
+    "duplicate": 8,
+    "spike": 32,
+    "total": 46,
+    "rate": 0.1314,
+    "unflagged_max": 0.8711,
+    "flagged_min": 4.1841
+  },
+  "drift": false
+}

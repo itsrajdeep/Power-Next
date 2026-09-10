@@ -1,0 +1,111 @@
+
+==========================================================================
+1. WORKBOOK STRUCTURE
+==========================================================================
+  sheets            : ['README', 'Training_Data', 'Test_Data', 'Sample_Submission']
+  Training_Data     : 1000 rows x 12 cols
+  Test_Data         : 350 rows x 9 cols
+  Sample_Submission : 350 rows, cols=['Test_ID', 'Predicted_Reference_Parameter', 'Validity_Label']
+  class balance     : Valid=866  Invalid=134  (13.4% invalid)
+
+==========================================================================
+2. MISSINGNESS IS A DETERMINISTIC VALIDITY SIGNAL
+==========================================================================
+  Sensor_S1   missing=  6  ->  Invalid=  6  Valid=  0
+  Sensor_S2   missing=  2  ->  Invalid=  2  Valid=  0
+  Sensor_S3   missing=  7  ->  Invalid=  7  Valid=  0
+  Sensor_S4   missing= 29  ->  Invalid=  0  Valid= 29
+  RULE: any of S1/S2/S3 missing (n=15) -> 100% Invalid : True
+  NOTE: S4 missing (n=29) -> 100% Valid : True   <-- generator artifact, DO NOT USE
+
+==========================================================================
+3. DUPLICATE MEASUREMENT VECTORS
+==========================================================================
+  duplicate rows      : 24 in 12 groups
+  all Invalid         : True
+  conflicting targets : 12 of 12 groups
+  test-set duplicates : 8
+
+==========================================================================
+4. SENSOR_S4 IS IRRELEVANT
+==========================================================================
+  corr(S4, Applied_Voltage_kV    ) = -0.0487
+  corr(S4, Load_Current_A        ) = -0.0167
+  corr(S4, Ambient_Temperature_C ) = +0.0073
+  corr(S4, Test_Duration_min     ) = -0.0211
+  corr(S4, Sensor_S1             ) = -0.0319
+  corr(S4, Sensor_S2             ) = -0.0264
+  corr(S4, Sensor_S3             ) = -0.0707
+  corr(S4, Reference_Parameter   ) = +0.0021
+
+==========================================================================
+5. S1/S2/S3 ARE DETERMINISTIC FUNCTIONS OF OPERATING CONDITIONS
+==========================================================================
+  Sensor_S1: poly4(V,I,Tamb,t)  CV R2=0.99748  MAE=0.1525  resid_sigma=0.1925
+  Sensor_S2: poly4(V,I,Tamb,t)  CV R2=0.99727  MAE=0.1466  resid_sigma=0.1833
+  Sensor_S3: poly4(V,I,Tamb,t)  CV R2=0.99595  MAE=0.2482  resid_sigma=0.3130
+
+==========================================================================
+6. FAULT TAXONOMY (train)
+==========================================================================
+  missing S1/S2/S3    : 15
+  duplicate vector    : 24
+  single-sensor spike : 95
+  ------------------------------
+  sum                 : 134   (actual Invalid = 134)  MATCH=True
+  spiked sensor split : {'Sensor_S2': np.int64(48), 'Sensor_S1': np.int64(26), 'Sensor_S3': np.int64(21)}
+
+==========================================================================
+7. SEPARATION GAP AND RULE PERFORMANCE
+==========================================================================
+  max residual, Valid rows  : 1.0551
+  min residual, spiked rows : 4.1774
+  CLEAN GAP                 : 1.055 .. 4.177  (4.0x)
+  Valid residual sigma      : 0.1546
+    th=1.1  P=1.0000 R=1.0000 F1=1.0000
+    th=1.5  P=1.0000 R=1.0000 F1=1.0000
+    th=2.0  P=1.0000 R=1.0000 F1=1.0000
+    th=3.0  P=1.0000 R=1.0000 F1=1.0000
+    th=4.0  P=1.0000 R=1.0000 F1=1.0000
+
+==========================================================================
+8. OUT-OF-FOLD CONFIRMATION (grouped CV, twins refit inside each fold)
+==========================================================================
+  OOF  P=1.0000  R=1.0000  F1=1.0000
+  errors: FP=0  FN=0
+
+==========================================================================
+9. REFERENCE PARAMETER MODEL
+==========================================================================
+  ALL rows,   HistGBR ops   MAE=0.8963 R2=0.95895
+  VALID only, HistGBR ops   MAE=0.6600 R2=0.98949
+  VALID only, poly4   ops   MAE=0.5134 R2=0.99515
+  VALID only, BLEND w=0.65   MAE=0.4606 R2=0.99607   <-- best
+
+==========================================================================
+10. RULE APPLIED TO THE 350 TEST ROWS
+==========================================================================
+  missing S1/S2/S3  : 6
+  duplicate vectors : 8
+  sensor spike >2.0 : 32
+  TOTAL Invalid     : 46 / 350  (13.1%)   [train rate 13.4%]
+  max residual, unflagged : 0.8711
+  min residual, flagged   : 4.1841
+  -> GAP HOLDS ON UNSEEN DATA
+
+==========================================================================
+11. TRAIN vs TEST DRIFT (KS test)
+==========================================================================
+  Applied_Voltage_kV     KS=0.0561 p=0.3720  ok
+  Load_Current_A         KS=0.0467 p=0.6047  ok
+  Ambient_Temperature_C  KS=0.0349 p=0.8986  ok
+  Test_Duration_min      KS=0.0401 p=0.7803  ok
+  Sensor_S1              KS=0.0324 p=0.9386  ok
+  Sensor_S2              KS=0.0468 p=0.6062  ok
+  Sensor_S3              KS=0.0496 p=0.5290  ok
+  Sensor_S4              KS=0.0467 p=0.6232  ok
+  significant drift anywhere: False
+
+==========================================================================
+  Written: verification/verified_findings.json
+==========================================================================

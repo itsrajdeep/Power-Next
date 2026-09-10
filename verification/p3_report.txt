@@ -1,0 +1,127 @@
+=================================================================
+Power-Next P3 -- Benchmark Leaderboard
+=================================================================
+
+[1/7] Loading data...
+  Train: (1000, 11)  Valid: (866, 11)  Test: (350, 9)
+
+[2/7] Classification benchmark...
+  [CLF] Dummy        | raw_operating          | F1=0.0000 AUC=0.5000
+  [CLF] LogReg       | raw_operating          | F1=0.2087 AUC=0.5155
+  [CLF] RF           | raw_operating          | F1=0.0000 AUC=0.5017
+  [CLF] ExtraTrees   | raw_operating          | F1=0.0143 AUC=0.5047
+  [CLF] HistGB       | raw_operating          | F1=0.0366 AUC=0.5282
+  [CLF] CatBoost     | raw_operating          | F1=0.1456 AUC=0.5164
+  [CLF] XGBoost      | raw_operating          | F1=0.0546 AUC=0.5480
+  [CLF] LightGBM     | raw_operating          | F1=0.1257 AUC=0.5418
+  [CLF] Dummy        | all_raw                | F1=0.0000 AUC=0.5000
+  [CLF] LogReg       | all_raw                | F1=0.1793 AUC=0.5665
+  [CLF] RF           | all_raw                | F1=0.3230 AUC=0.8695
+  [CLF] ExtraTrees   | all_raw                | F1=0.4048 AUC=0.8712
+  [CLF] HistGB       | all_raw                | F1=0.6082 AUC=0.8600
+  [CLF] CatBoost     | all_raw                | F1=0.6919 AUC=0.8722
+  [CLF] XGBoost      | all_raw                | F1=0.6731 AUC=0.8824
+  [CLF] LightGBM     | all_raw                | F1=0.7109 AUC=0.8837
+  [CLF] Dummy        | sensor_consistency     | F1=0.0000 AUC=0.5000
+  [CLF] LogReg       | sensor_consistency     | F1=0.8978 AUC=0.9758
+  [CLF] RF           | sensor_consistency     | F1=0.9612 AUC=0.9994
+  [CLF] ExtraTrees   | sensor_consistency     | F1=0.9732 AUC=1.0000
+  [CLF] HistGB       | sensor_consistency     | F1=0.8934 AUC=0.9223
+  [CLF] CatBoost     | sensor_consistency     | F1=0.9887 AUC=1.0000
+  [CLF] XGBoost      | sensor_consistency     | F1=0.9848 AUC=0.9988
+  [CLF] LightGBM     | sensor_consistency     | F1=0.8898 AUC=0.9176
+
+[3/7] Regression benchmark...
+  [REG] Dummy        | raw_operating          | MAE=8.4821 R2=-0.1201
+  [REG] Ridge        | raw_operating          | MAE=3.3570 R2=0.8637
+  [REG] ElasticNet   | raw_operating          | MAE=3.3569 R2=0.8637
+  [REG] Huber        | raw_operating          | MAE=3.2644 R2=0.8578
+  [REG] RF           | raw_operating          | MAE=0.7841 R2=0.9849
+  [REG] ExtraTrees   | raw_operating          | MAE=0.5895 R2=0.9891
+  [REG] HistGBR      | raw_operating          | MAE=0.6566 R2=0.9885
+  [REG] SVR          | raw_operating          | MAE=0.7688 R2=0.9878
+  [REG] CatBoost     | raw_operating          | MAE=0.4697 R2=0.9948
+  [REG] XGBoost      | raw_operating          | MAE=0.7345 R2=0.9878
+  [REG] LightGBM     | raw_operating          | MAE=0.6513 R2=0.9886
+  [REG] Dummy        | all_raw                | MAE=8.4821 R2=-0.1201
+  [REG] Ridge        | all_raw                | MAE=3.3500 R2=0.8646
+  [REG] ElasticNet   | all_raw                | MAE=3.3474 R2=0.8642
+  [REG] Huber        | all_raw                | MAE=3.2594 R2=0.8592
+  [REG] RF           | all_raw                | MAE=0.7317 R2=0.9855
+  [REG] ExtraTrees   | all_raw                | MAE=0.5962 R2=0.9881
+  [REG] HistGBR      | all_raw                | MAE=0.6391 R2=0.9892
+  [REG] SVR          | all_raw                | MAE=0.9043 R2=0.9823
+  [REG] CatBoost     | all_raw                | MAE=0.4495 R2=0.9954
+  [REG] XGBoost      | all_raw                | MAE=0.6782 R2=0.9896
+  [REG] LightGBM     | all_raw                | MAE=0.6324 R2=0.9895
+  [REG] Dummy        | poly4_operating        | MAE=8.4821 R2=-0.1201
+  [REG] Ridge        | poly4_operating        | MAE=0.6196 R2=0.9931
+  [REG] ElasticNet   | poly4_operating        | MAE=0.8386 R2=0.9880
+  [REG] Huber        | poly4_operating        | MAE=0.5580 R2=0.9940
+  [REG] RF           | poly4_operating        | MAE=0.6512 R2=0.9877
+  [REG] ExtraTrees   | poly4_operating        | MAE=0.4736 R2=0.9921
+  [REG] HistGBR      | poly4_operating        | MAE=0.5661 R2=0.9921
+  [REG] SVR          | poly4_operating        | MAE=0.6645 R2=0.9894
+  [REG] CatBoost     | poly4_operating        | MAE=0.5619 R2=0.9928
+  [REG] XGBoost      | poly4_operating        | MAE=0.6656 R2=0.9891
+  [REG] LightGBM     | poly4_operating        | MAE=0.5585 R2=0.9922
+
+[4/7] Ablations...
+  [ABL] HistGBR all_rows MAE=0.8747
+  [ABL] HistGBR valid_only MAE=0.6566
+  [ABL] HistGBR with_S4 MAE=0.6391
+  [ABL] HistGBR without_S4 MAE=0.6266
+  [ABL] HistGBR with_Duration MAE=0.6566
+  [ABL] HistGBR no_Duration MAE=0.7228
+  [ABL] PolyRidge(d=2) MAE=0.9592
+  [ABL] PolyRidge(d=3) MAE=0.7326
+  [ABL] PolyRidge(d=4) MAE=0.6194
+  [ABL] PolyRidge(d=5) MAE=0.5633
+
+[5/7] Team entries (twin.py / regress.py)...
+  [TEAM] P1 Twin not available: No module named 'src.twin'
+  [TEAM] P2 Regressor not available: No module named 'src.regress'
+
+[6/7] Saving leaderboard...
+  Rows: 69  Saved: D:\Powernext\outputs\model_comparison.csv
+
+  -- Classification top-5 (sensor_consistency, F1 desc) --
+     model     f1  roc_auc    mcc
+  CatBoost 0.9887   1.0000 0.9870
+   XGBoost 0.9848   0.9988 0.9827
+ExtraTrees 0.9732   1.0000 0.9696
+        RF 0.9612   0.9994 0.9565
+    LogReg 0.8978   0.9758 0.8819
+
+  -- Regression top-5 (raw_operating, MAE asc) --
+     model    mae   rmse     r2
+  CatBoost 0.4697 0.7742 0.9948
+ExtraTrees 0.5895 1.1226 0.9891
+  LightGBM 0.6513 1.1452 0.9886
+   HistGBR 0.6566 1.1513 0.9885
+   XGBoost 0.7345 1.1866 0.9878
+
+  -- Ablation results --
+                 model    feature_set    mae     r2
+     HistGBR(all_rows)  raw_operating 0.8747 0.9610
+   HistGBR(valid_only)  raw_operating 0.6566 0.9885
+      HistGBR(with_S4)        all_raw 0.6391 0.9892
+   HistGBR(without_S4)        all_raw 0.6266 0.9896
+HistGBR(with_Duration)  raw_operating 0.6566 0.9885
+  HistGBR(no_Duration)  raw_operating 0.7228 0.9873
+        PolyRidge(d=2) poly_operating 0.9592 0.9863
+        PolyRidge(d=3) poly_operating 0.7326 0.9910
+        PolyRidge(d=4) poly_operating 0.6194 0.9931
+        PolyRidge(d=5) poly_operating 0.5633 0.9943
+
+[7/7] Charts...
+  Chart: gap_separation.png
+  Chart: fault_taxonomy.png
+  Chart: leaderboard_classification.png
+  Chart: leaderboard_regression.png
+  Chart: pred_vs_actual.png
+  Chart: residual_by_regime.png
+
+=================================================================
+Done. Leaderboard: 69 rows. Charts: D:\Powernext\outputs\charts
+=================================================================

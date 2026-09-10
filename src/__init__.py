@@ -1,1 +1,1 @@
-# Power-Next source package
+"""Source package for the CPRI PowerNext-AI submission."""
